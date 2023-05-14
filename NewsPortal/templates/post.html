@@ -1,0 +1,18 @@
+{% extends 'flatpages/default.html' %} 
+
+{% load custom_filters %}
+
+{% block title %}
+A Post
+{% endblock title %}
+
+{% block content %}
+<h2>{{ post.title }}</h2>
+<br>
+<h3> By {{ post.author.user }} </h3>
+<br>
+<!-- <h3>{{ post.time_in|date:'D.M.Y' }}</h3> -->
+<h3>{{ post.time_in|date:'d.m.Y' }}</h3>
+<br>
+{{ post.body|censor }}
+{% endblock content %}

@@ -1,0 +1,52 @@
+{% extends 'flatpages/default.html' %} 
+
+{% load custom_filters %}
+{% load custom_tags %}
+
+{% block title %}
+	News
+{% endblock title %}
+ 
+{% block content %}
+	<h1>The News</h1>
+	<h3>{{ time_now|date:'M d, Y' }}</h3>
+	<h3> Total news {{ news|length }}  </h3>
+	<hr>
+
+	{% if news %}
+		{% for piece in news %}
+			<p> 
+				<h3> {{ piece.title }} </h3>
+				<br>
+				<!-- {{ piece.time_in|date:'l, j F, Y' }} --> 
+				{{ piece.time_in|date:'d.m.Y' }} 
+				<br>
+				{{ piece.body|truncatewords:20|censor }} 
+				<br>
+				<br>
+				<hr>
+			</p>
+		{% endfor %}		
+   {% else %}
+       <h2>This page is empty. No news yet.</h2>
+   {% endif %}
+
+   {% if page_obj.has_previous %}
+       <a href="?{% url_replace page=1 %}">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {{ page_obj.number }}
+
+   {% if page_obj.has_next %}
+       <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+
+{% endblock content %}

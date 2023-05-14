@@ -1,0 +1,12 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+<h1>Add a Post </h1>
+<hr>
+<form action="" method="post">  <!-- html form -->
+	{% csrf_token %}            <!-- to mitigate CSRF attacks  -->
+	{{ form.as_p }}             <!-- form that we want to show on page, generated -->
+	<input type="submit" value="Save" /> <!-- button, to save, by method POST -->
+</form>
+
+{% endblock content %}

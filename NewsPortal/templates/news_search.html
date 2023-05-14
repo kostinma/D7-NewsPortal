@@ -1,0 +1,73 @@
+{% extends 'flatpages/default.html' %} 
+
+{% load custom_filters %}
+{% load custom_tags %}
+
+{% block title %}
+	News Search
+{% endblock title %}
+
+{% block content %}
+	<h1>The News Search</h1>
+	<h3>{{ time_now|date:'M d, Y' }}</h3>
+	<h3> Total news for search {{ news_search|length }}  </h3>
+	<hr>
+
+    <!--
+    The form uses a set of fields that will be used in a GET query.
+    -->
+	<form action="" method="get">
+        <!--
+        filterset is a variable passed here through context['filterset']
+        view.py : SearchPostList.get_queryset() as
+        self.filterset = SearchPostFilter(self.request.GET, queryset)
+        and later defined in
+        get_contextdata() as
+        context['filterset'] = self.filterset
+        -->
+        <!--
+    	{{ filterset.form }}
+        -->
+        {{ filterset.form.as_p }}
+        <input type="submit" value="Search" />
+    </form>
+
+	{% if news_search %}
+		{% for piece in news_search %}
+			<p> 
+				<h3> {{ piece.title|censor }} </h3>
+                <br>
+                By {{ piece.author.user }}
+				<br>
+				<!-- {{ piece.time_in|date:'l, j F, Y' }} --> 
+				{{ piece.time_in|date:'d.m.Y' }}
+				<br>
+				{{ piece.body|truncatewords:20|censor }} 
+				<br>
+				<br>
+				<hr>
+			</p>
+		{% endfor %}		
+   {% else %}
+       <h2>This page is empty. No news yet.</h2>
+   {% endif %}
+
+   {% if page_obj.has_previous %}
+       <a href="?{% url_replace page=1 %}">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {{ page_obj.number }}
+
+   {% if page_obj.has_next %}
+       <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+
+{% endblock content %}
